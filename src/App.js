@@ -1,23 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Auth from "./pages/Auth";
+import Action from "./pages/Actions";
+import PublicRoute from "./routes/PublicRoute";
+import PrivateRoute from "./routes/PrivateRoute";
+import { useSelector, useDispatch } from "react-redux";
 
 function App() {
+  const isLogin = useSelector((state) => state.isLogin);
+  const dispatch = useDispatch();
+
+  // const token =
+  useEffect(() => {
+    const token = localStorage.getItem("access-token");
+    if (token) {
+      dispatch({ type: "login" });
+    }
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    
+        <Router>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Auth />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/SignUp"
+              element={
+                <PublicRoute>
+                  <Auth />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/Action"
+              element={
+                <PrivateRoute>
+                  <Action />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </Router>
+  
     </div>
   );
 }
